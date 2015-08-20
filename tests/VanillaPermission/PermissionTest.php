@@ -54,6 +54,15 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($permission->hasOne([ "users.update" ]));
         $this->assertFalse($permission->hasOne([ "users.update", "users.truncate" ]));
         $this->assertFalse($permission->hasOne([]));
+
+        // Test add rule by passing strings as arguments, instead of a ParameterRule.
+        $permission->add("users.remove.administrator.revokeRights", "Revoke Rights", "description");
+
+        $permissionAdded = $permission->get("users.remove.administrator.revokeRights");
+
+        $this->assertSame("users.remove.administrator.revokeRights", $permissionAdded->name);
+        $this->assertSame("Revoke Rights", $permissionAdded->title);
+        $this->assertSame("description", $permissionAdded->description);
     }
 
     /**

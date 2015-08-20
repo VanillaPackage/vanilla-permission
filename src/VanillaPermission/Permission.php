@@ -20,11 +20,18 @@ class Permission
 
     /**
      * Add a new rule to this permission instance.
-     * @param PermissionRule $permissionRule Rule to add.
+     * @param string|PermissionRule $nameOrRule  Rule or name to add.
+     * @param string                $title       Rule title.
+     * @param string                $description Rule description.
      */
-    public function add(PermissionRule $permissionRule)
+    public function add($nameOrRule, $title = null, $description = null)
     {
-        $this->rules[] = $permissionRule;
+        if ($nameOrRule instanceof PermissionRule) {
+            $this->rules[] = $nameOrRule;
+            return;
+        }
+
+        $this->rules[] = new PermissionRule($nameOrRule, $title, $description);
     }
 
     /**
