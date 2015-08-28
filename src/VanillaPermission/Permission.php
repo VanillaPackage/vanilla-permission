@@ -2,6 +2,10 @@
 
 namespace Rentalhost\VanillaPermission;
 
+/**
+ * Class Permission
+ * @package Rentalhost\VanillaPermission
+ */
 class Permission
 {
     /**
@@ -15,11 +19,12 @@ class Permission
      */
     public function __construct()
     {
-        $this->rules = [];
+        $this->rules = [ ];
     }
 
     /**
      * Add a new rule to this permission instance.
+     *
      * @param string|PermissionRule $nameOrRule  Rule or name to add.
      * @param string                $title       Rule title.
      * @param string                $description Rule description.
@@ -28,6 +33,7 @@ class Permission
     {
         if ($nameOrRule instanceof PermissionRule) {
             $this->rules[] = $nameOrRule;
+
             return;
         }
 
@@ -36,7 +42,9 @@ class Permission
 
     /**
      * Get a rule by name.
+     *
      * @param  string $ruleName Rule name.
+     *
      * @return PermissionRule|null
      */
     public function get($ruleName)
@@ -46,6 +54,8 @@ class Permission
                 return $permissionRule;
             }
         }
+
+        return null;
     }
 
     /**
@@ -63,7 +73,7 @@ class Permission
      */
     public function getAllNames()
     {
-        $ruleNames = [];
+        $ruleNames = [ ];
 
         foreach ($this->rules as $rule) {
             $ruleNames[] = $rule->name;
@@ -75,7 +85,9 @@ class Permission
     /**
      * Returns only available rules based on array of names.
      * It'll exclude all disallowed rules and generate a new permissions list.
-     * @param  array  $ruleNames Array of names.
+     *
+     * @param  array $ruleNames Array of names.
+     *
      * @return Permission
      */
     public function getOnly(array $ruleNames)
@@ -89,22 +101,22 @@ class Permission
         // Store post-allowed rules and your names.
         // After allow some rule, it'll marked as post-allowed.
         // So it make easy allow sub-rules of parent.
-        $postAllowedRules = [];
-        $postAllowedRulesNames = [];
+        $postAllowedRules = [ ];
+        $postAllowedRulesNames = [ ];
 
         // Next step will unset all rules that not have defined parents.
         foreach ($allowedRules as $allowedRule) {
             // All zero-level rule is truly allowed.
             // Eg. "users", "billings", ...
-            if (strpos($allowedRule->name, ".") === false) {
+            if (strpos($allowedRule->name, '.') === false) {
                 $postAllowedRules[] = $allowedRule;
                 $postAllowedRulesNames[] = $allowedRule->name;
                 continue;
             }
 
             // Else, check if the parent of this rule was post-allowed.
-            $allowedRuleParent = substr($allowedRule->name, 0, strrpos($allowedRule->name, "."));
-            if (in_array($allowedRuleParent, $postAllowedRulesNames)) {
+            $allowedRuleParent = substr($allowedRule->name, 0, strrpos($allowedRule->name, '.'));
+            if (in_array($allowedRuleParent, $postAllowedRulesNames, true)) {
                 $postAllowedRules[] = $allowedRule;
                 $postAllowedRulesNames[] = $allowedRule->name;
                 continue;
@@ -120,15 +132,17 @@ class Permission
 
     /**
      * Get allowed rules without check parents.
+     *
      * @param  string[] $ruleNames Rule names.
+     *
      * @return PermissionRule[]
      */
     private function filterPreAllowedRules(array $ruleNames)
     {
-        $allowedRules = [];
+        $allowedRules = [ ];
 
         foreach ($this->rules as $rule) {
-            if (in_array($rule->name, $ruleNames)) {
+            if (in_array($rule->name, $ruleNames, true)) {
                 $allowedRules[] = $rule;
             }
         }
@@ -138,15 +152,17 @@ class Permission
 
     /**
      * Sort a rules array by level.
+     *
      * @param  string[] $ruleNames Rule names.
+     *
      * @return string[]
      */
     private function sortLevel(array $ruleNames)
     {
-        $levelCount = [];
+        $levelCount = [ ];
 
         foreach ($ruleNames as $ruleName) {
-            $levelCount[$ruleName] = substr_count($ruleName, ".");
+            $levelCount[$ruleName] = substr_count($ruleName, '.');
         }
 
         asort($levelCount);
@@ -157,7 +173,9 @@ class Permission
     /**
      * Check if rule was defined.
      * Not necessarily that is fully allowed.
-     * @param  string  $ruleName Rule name.
+     *
+     * @param  string $ruleName Rule name.
+     *
      * @return boolean
      */
     public function has($ruleName)
@@ -167,7 +185,9 @@ class Permission
 
     /**
      * Check if all rules was defined.
-     * @param  array   $ruleNames Rules names.
+     *
+     * @param  array $ruleNames Rules names.
+     *
      * @return boolean
      */
     public function hasAll(array $ruleNames)
@@ -183,7 +203,9 @@ class Permission
 
     /**
      * Check if one of rules was defined.
-     * @param  array   $ruleNames Rules names.
+     *
+     * @param  array $ruleNames Rules names.
+     *
      * @return boolean
      */
     public function hasOne(array $ruleNames)

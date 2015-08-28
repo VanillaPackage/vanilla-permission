@@ -4,6 +4,10 @@ namespace Rentalhost\VanillaPermission;
 
 use PHPUnit_Framework_TestCase;
 
+/**
+ * Class PermissionRuleTest
+ * @package Rentalhost\VanillaPermission
+ */
 class PermissionRuleTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -12,11 +16,11 @@ class PermissionRuleTest extends PHPUnit_Framework_TestCase
      */
     public function testBasic()
     {
-        $permissionRule = new PermissionRule("name", "title", "description");
+        $permissionRule = new PermissionRule('name', 'title', 'description');
 
-        $this->assertSame("name", $permissionRule->name);
-        $this->assertSame("title", $permissionRule->title);
-        $this->assertSame("description", $permissionRule->description);
+        static::assertSame('name', $permissionRule->name);
+        static::assertSame('title', $permissionRule->title);
+        static::assertSame('description', $permissionRule->description);
     }
 
     /**
@@ -24,8 +28,8 @@ class PermissionRuleTest extends PHPUnit_Framework_TestCase
      */
     public function testPublicProperties()
     {
-        $this->assertClassHasAttribute("name", PermissionRule::class);
-        $this->assertClassHasAttribute("title", PermissionRule::class);
-        $this->assertClassHasAttribute("description", PermissionRule::class);
+        static::assertClassHasAttribute('name', PermissionRule::class);
+        static::assertClassHasAttribute('title', PermissionRule::class);
+        static::assertClassHasAttribute('description', PermissionRule::class);
     }
 }

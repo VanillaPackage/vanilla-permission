@@ -2,6 +2,10 @@
 
 namespace Rentalhost\VanillaPermission;
 
+/**
+ * Class PermissionRule
+ * @package Rentalhost\VanillaPermission
+ */
 class PermissionRule
 {
     /**

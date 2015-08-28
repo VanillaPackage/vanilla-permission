@@ -4,6 +4,10 @@ namespace Rentalhost\VanillaPermission;
 
 use PHPUnit_Framework_TestCase;
 
+/**
+ * Class PermissionTest
+ * @package Rentalhost\VanillaPermission
+ */
 class PermissionTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -20,49 +24,49 @@ class PermissionTest extends PHPUnit_Framework_TestCase
     public function testBasic()
     {
         $permission = new Permission;
-        $permission->add(new PermissionRule("users"));
-        $permission->add(new PermissionRule("users.list"));
-        $permission->add(new PermissionRule("users.create"));
-        $permission->add(new PermissionRule("users.remove"));
-        $permission->add(new PermissionRule("users.remove.administrator"));
+        $permission->add(new PermissionRule('users'));
+        $permission->add(new PermissionRule('users.list'));
+        $permission->add(new PermissionRule('users.create'));
+        $permission->add(new PermissionRule('users.remove'));
+        $permission->add(new PermissionRule('users.remove.administrator'));
 
-        $checkRules = [ "users", "users.list", "users.create", "users.remove", "users.remove.administrator" ];
+        $checkRules = [ 'users', 'users.list', 'users.create', 'users.remove', 'users.remove.administrator' ];
 
-        $this->assertInstanceOf(PermissionRule::class, $permission->get("users.list"));
-        $this->assertEquals($checkRules, $permission->getAllNames());
+        static::assertInstanceOf(PermissionRule::class, $permission->get('users.list'));
+        static::assertEquals($checkRules, $permission->getAllNames());
 
         foreach ($checkRules as $checkRule) {
-            $this->assertTrue(in_array(new PermissionRule($checkRule), $permission->getAll()));
-            $this->assertTrue($permission->has($checkRule));
+            static::assertTrue(in_array(new PermissionRule($checkRule), $permission->getAll(), false));
+            static::assertTrue($permission->has($checkRule));
         }
 
-        $this->assertTrue($permission->hasAll($checkRules));
-        $this->assertTrue($permission->hasAll([ "users", "users.list" ]));
-        $this->assertTrue($permission->hasAll([ "users.list", "users" ]));
-        $this->assertTrue($permission->hasAll([ "users.list" ]));
-        $this->assertTrue($permission->hasAll([]));
+        static::assertTrue($permission->hasAll($checkRules));
+        static::assertTrue($permission->hasAll([ 'users', 'users.list' ]));
+        static::assertTrue($permission->hasAll([ 'users.list', 'users' ]));
+        static::assertTrue($permission->hasAll([ 'users.list' ]));
+        static::assertTrue($permission->hasAll([ ]));
 
-        $this->assertTrue($permission->hasOne($checkRules));
-        $this->assertTrue($permission->hasOne([ "users", "users.list" ]));
-        $this->assertTrue($permission->hasOne([ "users.list", "users" ]));
-        $this->assertTrue($permission->hasOne([ "users.list" ]));
+        static::assertTrue($permission->hasOne($checkRules));
+        static::assertTrue($permission->hasOne([ 'users', 'users.list' ]));
+        static::assertTrue($permission->hasOne([ 'users.list', 'users' ]));
+        static::assertTrue($permission->hasOne([ 'users.list' ]));
 
-        $this->assertFalse($permission->hasAll([ "users", "users.list", "users.update" ]));
-        $this->assertFalse($permission->hasAll([ "users", "users.update" ]));
-        $this->assertFalse($permission->hasAll([ "users.update" ]));
+        static::assertFalse($permission->hasAll([ 'users', 'users.list', 'users.update' ]));
+        static::assertFalse($permission->hasAll([ 'users', 'users.update' ]));
+        static::assertFalse($permission->hasAll([ 'users.update' ]));
 
-        $this->assertFalse($permission->hasOne([ "users.update" ]));
-        $this->assertFalse($permission->hasOne([ "users.update", "users.truncate" ]));
-        $this->assertFalse($permission->hasOne([]));
+        static::assertFalse($permission->hasOne([ 'users.update' ]));
+        static::assertFalse($permission->hasOne([ 'users.update', 'users.truncate' ]));
+        static::assertFalse($permission->hasOne([ ]));
 
         // Test add rule by passing strings as arguments, instead of a ParameterRule.
-        $permission->add("users.remove.administrator.revokeRights", "Revoke Rights", "description");
+        $permission->add('users.remove.administrator.revokeRights', 'Revoke Rights', 'description');
 
-        $permissionAdded = $permission->get("users.remove.administrator.revokeRights");
+        $permissionAdded = $permission->get('users.remove.administrator.revokeRights');
 
-        $this->assertSame("users.remove.administrator.revokeRights", $permissionAdded->name);
-        $this->assertSame("Revoke Rights", $permissionAdded->title);
-        $this->assertSame("description", $permissionAdded->description);
+        static::assertSame('users.remove.administrator.revokeRights', $permissionAdded->name);
+        static::assertSame('Revoke Rights', $permissionAdded->title);
+        static::assertSame('description', $permissionAdded->description);
     }
 
     /**
@@ -74,33 +78,39 @@ class PermissionTest extends PHPUnit_Framework_TestCase
     public function testGetOnly()
     {
         $permission = new Permission;
-        $permission->add(new PermissionRule("users"));
-        $permission->add(new PermissionRule("users.list"));
-        $permission->add(new PermissionRule("users.create"));
-        $permission->add(new PermissionRule("users.remove"));
-        $permission->add(new PermissionRule("users.remove.administrator"));
+        $permission->add(new PermissionRule('users'));
+        $permission->add(new PermissionRule('users.list'));
+        $permission->add(new PermissionRule('users.create'));
+        $permission->add(new PermissionRule('users.remove'));
+        $permission->add(new PermissionRule('users.remove.administrator'));
 
         // Simple cases.
-        $this->assertEquals([], $permission->getOnly([])->getAllNames());
-        $this->assertEquals([ "users" ], $permission->getOnly([ "users" ])->getAllNames());
-        $this->assertEquals([ "users", "users.list" ], $permission->getOnly([ "users", "users.list" ])->getAllNames());
-        $this->assertEquals([ "users", "users.remove" ], $permission->getOnly([ "users", "users.remove" ])->getAllNames());
-        $this->assertEquals([ "users", "users.remove" ], $permission->getOnly([ "users.remove", "users" ])->getAllNames());
+        static::assertEquals([ ], $permission->getOnly([ ])->getAllNames());
+        static::assertEquals([ 'users' ], $permission->getOnly([ 'users' ])->getAllNames());
+        static::assertEquals([ 'users', 'users.list' ], $permission->getOnly([ 'users', 'users.list' ])->getAllNames());
+        static::assertEquals([ 'users', 'users.remove' ], $permission->getOnly([ 'users', 'users.remove' ])->getAllNames());
+        static::assertEquals([ 'users', 'users.remove' ], $permission->getOnly([ 'users.remove', 'users' ])->getAllNames());
 
-        $this->assertCount(3, $permission->getOnly([ "users", "users.remove", "users.remove.administrator" ])->getAll());
-        $this->assertCount(4, $permission->getOnly([ "users", "users.create", "users.remove", "users.remove.administrator" ])->getAll());
+        static::assertCount(3, $permission->getOnly([ 'users', 'users.remove', 'users.remove.administrator' ])->getAll());
+        static::assertCount(4, $permission->getOnly([ 'users', 'users.create', 'users.remove', 'users.remove.administrator' ])->getAll());
 
         // Not matched parents cases.
-        $this->assertEquals([], $permission->getOnly([ "users.remove" ])->getAllNames());
-        $this->assertEquals([], $permission->getOnly([ "users.remove", "users.remove.administrator" ])->getAllNames());
+        static::assertEquals([ ], $permission->getOnly([ 'users.remove' ])->getAllNames());
+        static::assertEquals([ ], $permission->getOnly([ 'users.remove', 'users.remove.administrator' ])->getAllNames());
 
         // Simulate sub-user permission.
-        $userPermissions = $permission->getOnly([ "users", "users.list", "users.create", "users.remove" ]);
-        $this->assertCount(4, $userPermissions->getAll());
+        $userPermissions = $permission->getOnly([ 'users', 'users.list', 'users.create', 'users.remove' ]);
+        static::assertCount(4, $userPermissions->getAll());
 
-        // Note: this user not have "users.remove.administrator" permission.
+        // Note: this user not have 'users.remove.administrator' permission.
         // So it will not be allowed on sub-user permissions.
-        $subUserPermissions = $userPermissions->getOnly([ "users", "users.list", "users.create", "users.remove", "users.remove.administrator" ]);
-        $this->assertCount(4, $subUserPermissions->getAll());
+        $subUserPermissions = $userPermissions->getOnly([
+            'users',
+            'users.list',
+            'users.create',
+            'users.remove',
+            'users.remove.administrator',
+        ]);
+        static::assertCount(4, $subUserPermissions->getAll());
     }
 }
