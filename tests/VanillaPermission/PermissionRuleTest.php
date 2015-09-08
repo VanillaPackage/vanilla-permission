@@ -16,11 +16,12 @@ class PermissionRuleTest extends PHPUnit_Framework_TestCase
      */
     public function testBasic()
     {
-        $permissionRule = new PermissionRule('name', 'title', 'description');
+        $permissionRule = new PermissionRule('name', 'title', 'description', 123);
 
         static::assertSame('name', $permissionRule->name);
         static::assertSame('title', $permissionRule->title);
         static::assertSame('description', $permissionRule->description);
+        static::assertSame(123, $permissionRule->data);
         static::assertSame(0, $permissionRule->level);
 
         static::assertSame(1, (new PermissionRule('a.b'))->level);
@@ -36,6 +37,7 @@ class PermissionRuleTest extends PHPUnit_Framework_TestCase
         static::assertClassHasAttribute('name', PermissionRule::class);
         static::assertClassHasAttribute('title', PermissionRule::class);
         static::assertClassHasAttribute('description', PermissionRule::class);
+        static::assertClassHasAttribute('data', PermissionRule::class);
         static::assertClassHasAttribute('level', PermissionRule::class);
     }
 }

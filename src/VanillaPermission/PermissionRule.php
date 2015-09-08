@@ -9,29 +9,35 @@ namespace Rentalhost\VanillaPermission;
 class PermissionRule
 {
     /**
-     * Permission name.
+     * Rule name.
      * @var string
      */
     public $name;
 
     /**
-     * Permission title.
+     * Rule title.
      * @var string
      */
     public $title;
 
     /**
-     * Permission description.
+     * Rule description.
      * @var string
      */
     public $description;
 
     /**
-     * Permission level (zero-index).
+     * Rule level (zero-index).
      * @property-read
      * @var integer
      */
     public $level;
+
+    /**
+     * Rule internal data.
+     * @var mixed
+     */
+    public $data;
 
     /**
      * Construct a new rule.
@@ -39,12 +45,37 @@ class PermissionRule
      * @param string $name        Rule name.
      * @param string $title       Rule title.
      * @param string $description Rule description.
+     * @param mixed  $data        Rule internal data.
      */
-    public function __construct($name, $title = null, $description = null)
+    public function __construct($name, $title = null, $description = null, $data = null)
     {
         $this->name = $name;
         $this->title = $title;
         $this->description = $description;
+        $this->data = $data;
         $this->level = substr_count($name, '.');
+    }
+
+    /**
+     * Get the internal rule data.
+     * Optionally, you can pass key to return.
+     *
+     * @param string|null $key          Key name to return.
+     * @param mixed|null  $defaultValue Value to return if key not exists.
+     *
+     * @return mixed
+     */
+    public function getData($key = null, $defaultValue = null)
+    {
+        // Returns the key, instead of all data.
+        if ($key !== null) {
+            if (!is_array($this->data) || !array_key_exists($key, $this->data)) {
+                return $defaultValue;
+            }
+
+            return $this->data[$key];
+        }
+
+        return $this->data;
     }
 }

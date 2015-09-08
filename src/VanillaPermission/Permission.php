@@ -28,8 +28,9 @@ class Permission
      * @param string|PermissionRule $nameOrRule  Rule or name to add.
      * @param string                $title       Rule title.
      * @param string                $description Rule description.
+     * @param mixed                 $data        Rule internal data.
      */
-    public function add($nameOrRule, $title = null, $description = null)
+    public function add($nameOrRule, $title = null, $description = null, $data = null)
     {
         if ($nameOrRule instanceof PermissionRule) {
             $this->rules[] = $nameOrRule;
@@ -37,7 +38,7 @@ class Permission
             return;
         }
 
-        $this->rules[] = new PermissionRule($nameOrRule, $title, $description);
+        $this->rules[] = new PermissionRule($nameOrRule, $title, $description, $data);
     }
 
     /**
