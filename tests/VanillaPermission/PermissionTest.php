@@ -30,7 +30,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         $permission->add(new PermissionRule('users.remove'));
         $permission->add(new PermissionRule('users.remove.administrator'));
 
-        $checkRules = [ 'users', 'users.list', 'users.create', 'users.remove', 'users.remove.administrator' ];
+        $checkRules = [ 'users', 'users.create', 'users.list', 'users.remove', 'users.remove.administrator' ];
 
         static::assertInstanceOf(PermissionRule::class, $permission->get('users.list'));
         static::assertEquals($checkRules, $permission->getAllNames());
@@ -67,6 +67,37 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         static::assertSame('users.remove.administrator.revokeRights', $permissionAdded->name);
         static::assertSame('Revoke Rights', $permissionAdded->title);
         static::assertSame('description', $permissionAdded->description);
+    }
+
+    /**
+     * Test get method, sorting results.
+     * @covers Rentalhost\VanillaPermission\Permission::getAllNames
+     * @covers Rentalhost\VanillaPermission\Permission::sortRules
+     */
+    public function testGetSorted()
+    {
+        $permission = new Permission;
+        $permission->add(new PermissionRule('view.remove'));
+        $permission->add(new PermissionRule('users'));
+        $permission->add(new PermissionRule('view.add.generate'));
+        $permission->add(new PermissionRule('users.list'));
+        $permission->add(new PermissionRule('users.create'));
+        $permission->add(new PermissionRule('users.remove'));
+        $permission->add(new PermissionRule('users.state'));
+        $permission->add(new PermissionRule('users.remove.administrator'));
+        $permission->add(new PermissionRule('view.add'));
+
+        static::assertEquals([
+            'users',
+            'users.create',
+            'users.list',
+            'users.remove',
+            'users.remove.administrator',
+            'users.state',
+            'view.add',
+            'view.add.generate',
+            'view.remove',
+        ], $permission->getAllNames());
     }
 
     /**

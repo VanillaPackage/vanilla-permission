@@ -64,7 +64,11 @@ class Permission
      */
     public function getAll()
     {
-        return $this->rules;
+        $rules = $this->rules;
+
+        usort($rules, 'static::sortRules');
+
+        return $rules;
     }
 
     /**
@@ -75,7 +79,7 @@ class Permission
     {
         $ruleNames = [ ];
 
-        foreach ($this->rules as $rule) {
+        foreach ($this->getAll() as $rule) {
             $ruleNames[] = $rule->name;
         }
 
@@ -168,6 +172,19 @@ class Permission
         asort($levelCount);
 
         return array_keys($levelCount);
+    }
+
+    /**
+     * Sort rules by rule name.
+     *
+     * @param PermissionRule $left  Left permission.
+     * @param PermissionRule $right Right permission.
+     *
+     * @return int
+     */
+    private static function sortRules($left, $right)
+    {
+        return strcmp($left->name, $right->name);
     }
 
     /**
