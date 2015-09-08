@@ -27,7 +27,15 @@ class PermissionRule
     public $description;
 
     /**
+     * Permission level (zero-index).
+     * @property-read
+     * @var integer
+     */
+    public $level;
+
+    /**
      * Construct a new rule.
+     *
      * @param string $name        Rule name.
      * @param string $title       Rule title.
      * @param string $description Rule description.
@@ -37,5 +45,6 @@ class PermissionRule
         $this->name = $name;
         $this->title = $title;
         $this->description = $description;
+        $this->level = substr_count($name, '.');
     }
 }
