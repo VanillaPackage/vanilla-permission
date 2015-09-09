@@ -20,6 +20,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase
      * @covers Rentalhost\VanillaPermission\Permission::has
      * @covers Rentalhost\VanillaPermission\Permission::hasAll
      * @covers Rentalhost\VanillaPermission\Permission::hasOne
+     * @covers Rentalhost\VanillaPermission\Permission::hasChildren
      * @covers Rentalhost\VanillaPermission\PermissionRule::getData
      */
     public function testBasic()
@@ -71,6 +72,15 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         static::assertSame([ 'data1' => 'value1' ], $permissionAdded->getData());
         static::assertSame('value1', $permissionAdded->getData('data1'));
         static::assertSame('value2', $permissionAdded->getData('data2', 'value2'));
+
+        // Test if rule has children.
+        static::assertSame(false, $permission->hasChildren('unknow'));
+        static::assertSame(true, $permission->hasChildren('users'));
+        static::assertSame(false, $permission->hasChildren('users.list'));
+        static::assertSame(false, $permission->hasChildren('users.create'));
+        static::assertSame(true, $permission->hasChildren('users.remove'));
+        static::assertSame(true, $permission->hasChildren('users.remove.administrator'));
+        static::assertSame(false, $permission->hasChildren('users.remove.administrator.revokeRights'));
     }
 
     /**

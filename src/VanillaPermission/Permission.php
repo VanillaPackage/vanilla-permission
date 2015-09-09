@@ -202,6 +202,37 @@ class Permission
     }
 
     /**
+     * Check if rule has at least one children.
+     * It's useful when a rule is a group of other rules and don't make sense it be enabled alone.
+     *
+     * @param string $ruleName Rule name to check.
+     *
+     * @return boolean
+     */
+    public function hasChildren($ruleName)
+    {
+        $currentRule = $this->get($ruleName);
+
+        // Fails if current rule wasn't defined.
+        if (!$currentRule) {
+            return false;
+        }
+
+        $ruleNameChildrenBase = $ruleName . '.';
+        $ruleNameLength = strlen($ruleNameChildrenBase);
+
+        foreach ($this->rules as $rule) {
+            if ($rule->level > $currentRule->level &&
+                substr($rule->name, 0, $ruleNameLength) === $ruleNameChildrenBase
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check if all rules was defined.
      *
      * @param  array $ruleNames Rules names.
