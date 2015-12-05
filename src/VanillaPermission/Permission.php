@@ -67,7 +67,7 @@ class Permission
     {
         $rules = $this->rules;
 
-        usort($rules, 'static::sortRules');
+        usort($rules, [ static::class, 'sortRules' ]);
 
         return $rules;
     }
@@ -106,7 +106,7 @@ class Permission
         // Store post-allowed rules and your names.
         // After allow some rule, it'll marked as post-allowed.
         // So it make easy allow sub-rules of parent.
-        $postAllowedRules = [ ];
+        $postAllowedRules      = [ ];
         $postAllowedRulesNames = [ ];
 
         // Next step will unset all rules that not have defined parents.
@@ -114,7 +114,7 @@ class Permission
             // All zero-level rule is truly allowed.
             // Eg. "users", "billings", ...
             if (strpos($allowedRule->name, '.') === false) {
-                $postAllowedRules[] = $allowedRule;
+                $postAllowedRules[]      = $allowedRule;
                 $postAllowedRulesNames[] = $allowedRule->name;
                 continue;
             }
@@ -122,14 +122,14 @@ class Permission
             // Else, check if the parent of this rule was post-allowed.
             $allowedRuleParent = substr($allowedRule->name, 0, strrpos($allowedRule->name, '.'));
             if (in_array($allowedRuleParent, $postAllowedRulesNames, true)) {
-                $postAllowedRules[] = $allowedRule;
+                $postAllowedRules[]      = $allowedRule;
                 $postAllowedRulesNames[] = $allowedRule->name;
                 continue;
             }
         }
 
         // Returns a new permission rules.
-        $permission = new self;
+        $permission        = new self;
         $permission->rules = array_values($postAllowedRules);
 
         return $permission;
@@ -219,7 +219,7 @@ class Permission
         }
 
         $ruleNameChildrenBase = $ruleName . '.';
-        $ruleNameLength = strlen($ruleNameChildrenBase);
+        $ruleNameLength       = strlen($ruleNameChildrenBase);
 
         foreach ($this->rules as $rule) {
             if ($rule->level > $currentRule->level &&
