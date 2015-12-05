@@ -222,8 +222,8 @@ class Permission
         $ruleNameLength       = strlen($ruleNameChildrenBase);
 
         foreach ($this->rules as $rule) {
-            if ($rule->level > $currentRule->level &&
-                substr($rule->name, 0, $ruleNameLength) === $ruleNameChildrenBase
+            if (substr($rule->name, 0, $ruleNameLength) === $ruleNameChildrenBase &&
+                $rule->getLevel() > $currentRule->getLevel()
             ) {
                 return true;
             }

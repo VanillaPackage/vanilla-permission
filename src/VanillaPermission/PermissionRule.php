@@ -27,13 +27,6 @@ class PermissionRule
     public $description;
 
     /**
-     * Rule level (zero-index).
-     * @property-read
-     * @var integer
-     */
-    public $level;
-
-    /**
      * Rule internal data.
      * @var mixed
      */
@@ -49,11 +42,19 @@ class PermissionRule
      */
     public function __construct($name, $title = null, $description = null, $data = null)
     {
-        $this->name = $name;
-        $this->title = $title;
+        $this->name        = $name;
+        $this->title       = $title;
         $this->description = $description;
-        $this->data = $data;
-        $this->level = substr_count($name, '.');
+        $this->data        = $data;
+    }
+
+    /**
+     * Returns the rule level based on root distance (zero-based).
+     * @return int
+     */
+    public function getLevel()
+    {
+        return substr_count($this->name, '.');
     }
 
     /**
