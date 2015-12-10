@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.11] 2015-12-10
+
+### Fixes
+
+- Permission::getAll() discarding rules after unsetting referenced array keys;
+
 ## [0.1.10] 2015-12-10
 
 ### Changed

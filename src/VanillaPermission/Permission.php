@@ -2,6 +2,8 @@
 
 namespace Rentalhost\VanillaPermission;
 
+use ArrayIterator;
+
 /**
  * Class Permission
  * @package Rentalhost\VanillaPermission
@@ -110,7 +112,7 @@ class Permission
         unset( $rulesUnprocessed[$ruleKey] );
 
         // Run only over unprocessed rules.
-        foreach ($rulesUnprocessed as $ruleKey => $rule) {
+        foreach (new ArrayIterator($rulesUnprocessed) as $ruleKey => $rule) {
             // Check if current rule is a children.
             if ($rule->getLevel() === $levelBase &&
                 substr($rule->name, 0, $descendantBaseNameLength) === $descendantBaseName

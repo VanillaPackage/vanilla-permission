@@ -169,6 +169,25 @@ class PermissionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test if getAll will not jump some rules when array cursor unprocessed rules jumps after unset.
+     */
+    public function testGetAllWillNotJumpRulesAfterUnprocessedRulesUnsetKeys()
+    {
+        $permission = new Permission();
+        $permission->add('a');
+        $permission->add('a.a');
+        $permission->add('a.a.a');
+        $permission->add('a.b');
+
+        static::assertSame([
+            'a',
+            'a.a',
+            'a.a.a',
+            'a.b',
+        ], $permission->getAllNames());
+    }
+
+    /**
      * Test if getAll will keep original order max than possible.
      * @coversNothing
      */
@@ -202,7 +221,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase
      * @covers Rentalhost\VanillaPermission\Permission::getAll
      * @covers Rentalhost\VanillaPermission\Permission::getDescendants
      */
-    public function testGellAllKeepingOriginalRules()
+    public function testGetAllKeepingOriginalRules()
     {
         $ruleB  = new PermissionRule('b');
         $ruleBA = new PermissionRule('b.a');
