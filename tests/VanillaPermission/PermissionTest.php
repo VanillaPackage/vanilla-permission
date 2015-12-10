@@ -158,4 +158,22 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         ]);
         static::assertCount(4, $subUserPermissions->getAll());
     }
+
+    /**
+     * Test if getOnly will accept rules in any order.
+     */
+    public function testGetOnlyShouldAcceptMixedOrderedRules()
+    {
+        $permission = new Permission;
+        $permission->add(new PermissionRule('users.list'));
+        $permission->add(new PermissionRule('users'));
+
+        static::assertEquals([ 'users', 'users.list' ], $permission->getOnly([ 'users', 'users.list' ])->getAllNames());
+
+        $permission = new Permission;
+        $permission->add(new PermissionRule('users'));
+        $permission->add(new PermissionRule('users.list'));
+
+        static::assertEquals([ 'users', 'users.list' ], $permission->getOnly([ 'users.list', 'users', ])->getAllNames());
+    }
 }

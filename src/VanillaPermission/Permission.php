@@ -146,7 +146,7 @@ class Permission
     {
         $allowedRules = [ ];
 
-        foreach ($this->rules as $rule) {
+        foreach ($this->getAll() as $rule) {
             if (in_array($rule->name, $ruleNames, true)) {
                 $allowedRules[] = $rule;
             }
