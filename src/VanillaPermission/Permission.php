@@ -76,9 +76,13 @@ class Permission
         $rulesUnprocessed = $this->rules;
         $rulesContainer   = [ ];
 
-        foreach ($this->rules as $rule) {
+        foreach ($this->rules as $ruleKey => $rule) {
             if ($rule->getLevel() === 0) {
-                self::getDescendants($rulesUnprocessed, $rulesContainer, $rule, 1);
+                // Unset from unprocessed list.
+                unset( $rulesUnprocessed[$ruleKey] );
+
+                // Get rules descendants.
+                self::getDescendants($rulesUnprocessed, $rulesContainer, $rule, $ruleKey, 1);
             }
         }
 
@@ -91,9 +95,10 @@ class Permission
      * @param PermissionRule[] $rulesUnprocessed Contains all rules yet unprocessed (speed up).
      * @param PermissionRule[] $container        Rules container.
      * @param PermissionRule   $ruleBase         Name of rule base.
+     * @param int              $ruleKey          Rule key on unprocessed container.
      * @param int              $levelBase        Level base to search by.
      */
-    private static function getDescendants(&$rulesUnprocessed, &$container, $ruleBase, $levelBase)
+    private static function getDescendants(&$rulesUnprocessed, &$container, $ruleBase, $ruleKey, $levelBase)
     {
         $descendantBaseName       = $ruleBase->name . '.';
         $descendantBaseNameLength = strlen($descendantBaseName);
@@ -101,18 +106,18 @@ class Permission
         // Add own rule base to container.
         $container[] = $ruleBase;
 
+        // Unset from unprocessed list.
+        unset( $rulesUnprocessed[$ruleKey] );
+
         // Run only over unprocessed rules.
         foreach ($rulesUnprocessed as $ruleKey => $rule) {
             // Check if current rule is a children.
             if ($rule->getLevel() === $levelBase &&
                 substr($rule->name, 0, $descendantBaseNameLength) === $descendantBaseName
             ) {
-                // Unset from unprocessed list.
-                unset( $rulesUnprocessed[$ruleKey] );
-
                 // Get rules children (grandchildren from rule base).
                 // This process too will add current rule to container, on top of it children.
-                self::getDescendants($rulesUnprocessed, $container, $rule, $levelBase + 1);
+                self::getDescendants($rulesUnprocessed, $container, $rule, $ruleKey, $levelBase + 1);
             }
         }
     }
