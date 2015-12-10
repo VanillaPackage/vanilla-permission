@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.10] 2015-12-10
+
+### Changed
+
+- Updated dependencies;
+
+### Breaks
+
+- Minimum PHP version is now 5.6;
+
 ## [0.1.9] 2015-12-10
 
 ### Changed
