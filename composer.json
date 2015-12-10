@@ -3,7 +3,7 @@
     "description": "The vanilla-permission will help you to control permissions.",
 
     "require-dev": {
-        "phpunit/phpunit": "^4.7"
+        "phpunit/phpunit": "^4.8"
     },
 
     "autoload": {
