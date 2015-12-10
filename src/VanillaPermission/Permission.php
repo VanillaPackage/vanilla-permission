@@ -61,10 +61,18 @@ class Permission
 
     /**
      * Returns all permissions rules.
+     *
+     * @param bool $protectedAndOrdered When true, will protect rules by avoiding rules without
+     *                                  group and will order it by definition children order (default true).
+     *
      * @return PermissionRule[]
      */
-    public function getAll()
+    public function getAll($protectedAndOrdered = true)
     {
+        if ($protectedAndOrdered === false) {
+            return $this->rules;
+        }
+
         $rulesUnprocessed = $this->rules;
         $rulesContainer   = [ ];
 

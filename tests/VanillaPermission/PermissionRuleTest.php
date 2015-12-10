@@ -32,6 +32,7 @@ class PermissionRuleTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test public properties.
+     * @coversNothing
      */
     public function testPublicProperties()
     {

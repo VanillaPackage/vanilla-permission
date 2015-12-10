@@ -15,7 +15,6 @@ class PermissionTest extends PHPUnit_Framework_TestCase
      * @covers Rentalhost\VanillaPermission\Permission::__construct
      * @covers Rentalhost\VanillaPermission\Permission::add
      * @covers Rentalhost\VanillaPermission\Permission::get
-     * @covers Rentalhost\VanillaPermission\Permission::getAll
      * @covers Rentalhost\VanillaPermission\Permission::getAllNames
      * @covers Rentalhost\VanillaPermission\Permission::has
      * @covers Rentalhost\VanillaPermission\Permission::hasAll
@@ -155,6 +154,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test if getOnly will accept rules in any order.
+     * @coversNothing
      */
     public function testGetOnlyShouldAcceptMixedOrderedRules()
     {
@@ -173,6 +173,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test if getAll will keep original order max than possible.
+     * @coversNothing
      */
     public function testGetAllKeepOriginalOrder()
     {
@@ -196,5 +197,36 @@ class PermissionTest extends PHPUnit_Framework_TestCase
             'b.c',
             'a',
         ], $permission->getAllNames());
+    }
+
+    /**
+     * Test getAll method by keeping all original rules, without apply ordering.
+     * It should returns even invalid rules.
+     * @covers Rentalhost\VanillaPermission\Permission::getAll
+     * @covers Rentalhost\VanillaPermission\Permission::getDescendants
+     */
+    public function testGellAllKeepingOriginalRules()
+    {
+        $ruleB  = new PermissionRule('b');
+        $ruleBA = new PermissionRule('b.a');
+        $rulaAA = new PermissionRule('a.a');
+
+        $permission = new Permission;
+        $permission->add($ruleBA);
+        $permission->add($rulaAA);
+        $permission->add($ruleB);
+
+        // First test secured method (ordered).
+        static::assertSame([
+            $ruleB,
+            $ruleBA,
+        ], $permission->getAll());
+
+        // Now test just get original rules.
+        static::assertSame([
+            $ruleBA,
+            $rulaAA,
+            $ruleB,
+        ], $permission->getAll(false));
     }
 }

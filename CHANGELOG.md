@@ -5,7 +5,10 @@
 ### Changed
 
 - Keep rules in original order, as much as possible;
+- Permission::getAll() now can returns unprotected and unordered rules by passing false to first parameter;
 - Permission::getOnly() code optimization (speed up);
+
+## [0.1.8] 2015-12-10
 
 ### Fixed
 
