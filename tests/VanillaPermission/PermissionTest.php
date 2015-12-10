@@ -20,7 +20,6 @@ class PermissionTest extends PHPUnit_Framework_TestCase
      * @covers Rentalhost\VanillaPermission\Permission::hasAll
      * @covers Rentalhost\VanillaPermission\Permission::hasOne
      * @covers Rentalhost\VanillaPermission\Permission::hasChildren
-     * @covers Rentalhost\VanillaPermission\PermissionRule::getData
      */
     public function testBasic()
     {
@@ -61,16 +60,14 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         static::assertFalse($permission->hasOne([ ]));
 
         // Test add rule by passing strings as arguments, instead of a ParameterRule.
-        $permission->add('users.remove.administrator.revokeRights', 'Revoke Rights', 'description', [ 'data1' => 'value1' ]);
+        $permission->add('users.remove.administrator.revokeRights', 'Revoke Rights', 'description', 123);
 
         $permissionAdded = $permission->get('users.remove.administrator.revokeRights');
 
         static::assertSame('users.remove.administrator.revokeRights', $permissionAdded->name);
         static::assertSame('Revoke Rights', $permissionAdded->title);
         static::assertSame('description', $permissionAdded->description);
-        static::assertSame([ 'data1' => 'value1' ], $permissionAdded->getData());
-        static::assertSame('value1', $permissionAdded->getData('data1'));
-        static::assertSame('value2', $permissionAdded->getData('data2', 'value2'));
+        static::assertSame(123, $permissionAdded->data);
 
         // Test if rule has children.
         static::assertSame(false, $permission->hasChildren('unknow'));
