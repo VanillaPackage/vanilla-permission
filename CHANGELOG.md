@@ -1,6 +1,10 @@
 # Changelog
 
-## [0.1.8] 2015-12-10
+## [0.1.9] 2015-12-10
+
+### Changed
+
+- Keep rules in original order, as much as possible;
 
 ### Fixed
 

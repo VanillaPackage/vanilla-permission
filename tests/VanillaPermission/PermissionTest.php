@@ -32,7 +32,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         $permission->add(new PermissionRule('users.remove'));
         $permission->add(new PermissionRule('users.remove.administrator'));
 
-        $checkRules = [ 'users', 'users.create', 'users.list', 'users.remove', 'users.remove.administrator' ];
+        $checkRules = [ 'users', 'users.list', 'users.create', 'users.remove', 'users.remove.administrator' ];
 
         static::assertInstanceOf(PermissionRule::class, $permission->get('users.list'));
         static::assertEquals($checkRules, $permission->getAllNames());
@@ -84,11 +84,10 @@ class PermissionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test get method, sorting results.
+     * Test getAllNames method.
      * @covers Rentalhost\VanillaPermission\Permission::getAllNames
-     * @covers Rentalhost\VanillaPermission\Permission::sortRules
      */
-    public function testGetSorted()
+    public function testGetAllNames()
     {
         $permission = new Permission;
         $permission->add(new PermissionRule('view.remove'));
@@ -103,14 +102,11 @@ class PermissionTest extends PHPUnit_Framework_TestCase
 
         static::assertEquals([
             'users',
-            'users.create',
             'users.list',
+            'users.create',
             'users.remove',
             'users.remove.administrator',
             'users.state',
-            'view.add',
-            'view.add.generate',
-            'view.remove',
         ], $permission->getAllNames());
     }
 
@@ -175,5 +171,32 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         $permission->add(new PermissionRule('users.list'));
 
         static::assertEquals([ 'users', 'users.list' ], $permission->getOnly([ 'users.list', 'users', ])->getAllNames());
+    }
+
+    /**
+     * Test if getAll will keep original order max than possible.
+     */
+    public function testGetAllKeepOriginalOrder()
+    {
+        $permission = new Permission;
+        $permission->add(new PermissionRule('b'));
+        $permission->add(new PermissionRule('b.a'));
+        $permission->add(new PermissionRule('a'));
+        $permission->add(new PermissionRule('b.b'));
+        $permission->add(new PermissionRule('b.c'));
+        $permission->add(new PermissionRule('b.b.a'));
+        $permission->add(new PermissionRule('b.b.b'));
+        $permission->add(new PermissionRule('b.b.c'));
+
+        static::assertEquals([
+            'b',
+            'b.a',
+            'b.b',
+            'b.b.a',
+            'b.b.b',
+            'b.b.c',
+            'b.c',
+            'a',
+        ], $permission->getAllNames());
     }
 }

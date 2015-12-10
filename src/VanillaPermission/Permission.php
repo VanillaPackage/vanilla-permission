@@ -65,11 +65,48 @@ class Permission
      */
     public function getAll()
     {
-        $rules = $this->rules;
+        $rulesUnprocessed = $this->rules;
+        $rulesContainer   = [ ];
 
-        usort($rules, [ static::class, 'sortRules' ]);
+        foreach ($this->rules as $rule) {
+            if ($rule->getLevel() === 0) {
+                self::getDescendants($rulesUnprocessed, $rulesContainer, $rule, 1);
+            }
+        }
 
-        return $rules;
+        return $rulesContainer;
+    }
+
+    /**
+     * Returns all descendants of a rule base.
+     *
+     * @param PermissionRule[] $rulesUnprocessed Contains all rules yet unprocessed (speed up).
+     * @param PermissionRule[] $container        Rules container.
+     * @param PermissionRule   $ruleBase         Name of rule base.
+     * @param int              $levelBase        Level base to search by.
+     */
+    private static function getDescendants(&$rulesUnprocessed, &$container, $ruleBase, $levelBase)
+    {
+        $descendantBaseName       = $ruleBase->name . '.';
+        $descendantBaseNameLength = strlen($descendantBaseName);
+
+        // Add own rule base to container.
+        $container[] = $ruleBase;
+
+        // Run only over unprocessed rules.
+        foreach ($rulesUnprocessed as $ruleKey => $rule) {
+            // Check if current rule is a children.
+            if ($rule->getLevel() === $levelBase &&
+                substr($rule->name, 0, $descendantBaseNameLength) === $descendantBaseName
+            ) {
+                // Unset from unprocessed list.
+                unset( $rulesUnprocessed[$ruleKey] );
+
+                // Get rules children (grandchildren from rule base).
+                // This process too will add current rule to container, on top of it children.
+                self::getDescendants($rulesUnprocessed, $container, $rule, $levelBase + 1);
+            }
+        }
     }
 
     /**
@@ -173,19 +210,6 @@ class Permission
         asort($levelCount);
 
         return array_keys($levelCount);
-    }
-
-    /**
-     * Sort rules by rule name.
-     *
-     * @param PermissionRule $left  Left permission.
-     * @param PermissionRule $right Right permission.
-     *
-     * @return int
-     */
-    private static function sortRules($left, $right)
-    {
-        return strcmp($left->name, $right->name);
     }
 
     /**
