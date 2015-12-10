@@ -5,6 +5,7 @@
 ### Changed
 
 - Keep rules in original order, as much as possible;
+- Permission::getOnly() code optimization (speed up);
 
 ### Fixed
 

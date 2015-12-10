@@ -113,8 +113,6 @@ class PermissionTest extends PHPUnit_Framework_TestCase
     /**
      * Test getOnly method.
      * @covers Rentalhost\VanillaPermission\Permission::getOnly
-     * @covers Rentalhost\VanillaPermission\Permission::filterPreAllowedRules
-     * @covers Rentalhost\VanillaPermission\Permission::sortLevel
      */
     public function testGetOnly()
     {
